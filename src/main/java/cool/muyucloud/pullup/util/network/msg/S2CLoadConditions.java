@@ -6,10 +6,11 @@ import cool.muyucloud.pullup.util.network.executor.ClientExecutor;
 import cool.muyucloud.pullup.util.network.handler.NetworkHandlerS2C;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class S2CLoadConditions {
     private final String spaceName;
@@ -40,8 +41,10 @@ public class S2CLoadConditions {
         buf.writeUtf(this.json);
     }
 
-    public void handler(CustomPayloadEvent.Context ctx) {
+    public void handler(Supplier<NetworkEvent.Context> sup) {
+        final NetworkEvent.Context ctx = sup.get();
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                 () -> () -> ClientExecutor.loadConditions(spaceName, json)));
+        ctx.setPacketHandled(true);
     }
 }

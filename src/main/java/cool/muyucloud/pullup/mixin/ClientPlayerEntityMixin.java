@@ -45,19 +45,19 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
     @Final
     protected Minecraft minecraft;
     @Unique
-    private static final Config CONFIG = PullUp.getConfig();
+    private static final Config pullup$CONFIG = PullUp.getConfig();
     @Unique
-    private int ticks = 0;
+    private int pullup$ticks = 0;
     @Unique
-    private boolean isNewTick = false;
+    private boolean pullup$isNewTick = false;
     @Unique
-    private long flightStart = new Date().getTime();
+    private long pullup$flightStart = new Date().getTime();
     @Unique
-    private final HashMap<ResourceLocation, ConditionTrigger> conditionTriggers = new HashMap<>();
+    private final HashMap<ResourceLocation, ConditionTrigger> pullup$conditionTriggers = new HashMap<>();
     @Unique
-    private final HashSet<ResourceLocation> triggersToRemove = new HashSet<>();
+    private final HashSet<ResourceLocation> pullup$triggersToRemove = new HashSet<>();
     @Unique
-    private final TreeMap<ResourceLocation, Condition.ColoredText> hudTexts = new TreeMap<>();
+    private final TreeMap<ResourceLocation, Condition.ColoredText> pullup$hudTexts = new TreeMap<>();
 
     public ClientPlayerEntityMixin(Level world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -65,25 +65,25 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo ci) {
-        this.updateTick();
-        if (!this.isNewTick) {
+        this.pullup$updateTick();
+        if (!this.pullup$isNewTick) {
             return;
         }
 
-        this.checkConditions();
-        this.playSoundsAndDisplayTexts();
-        this.clearTriggers();
+        this.pullup$checkConditions();
+        this.pullup$playSoundsAndDisplayTexts();
+        this.pullup$clearTriggers();
     }
 
     @Unique
-    private void checkConditions() {
+    private void pullup$checkConditions() {
         for (Condition condition : Registry.CONDITIONS.getAll()) {
-            if (this.ticks % condition.getCheckDelay() != 0) {
+            if (this.pullup$ticks % condition.getCheckDelay() != 0) {
                 continue;
             }
 
-            this.registerTrigger(condition.getId());
-            ConditionTrigger trigger = this.conditionTriggers.get(condition.getId());
+            this.pullup$registerTrigger(condition.getId());
+            ConditionTrigger trigger = this.pullup$conditionTriggers.get(condition.getId());
 
             if (!condition.verifyExpressions(((LocalPlayer) (Object) this), this.level())) {
                 trigger.isTriggered = false;
@@ -96,36 +96,36 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
     }
 
     @Unique
-    private void registerTrigger(ResourceLocation id) {
-        if (this.conditionTriggers.containsKey(id)) {
+    private void pullup$registerTrigger(ResourceLocation id) {
+        if (this.pullup$conditionTriggers.containsKey(id)) {
             return;
         }
 
         ConditionTrigger trigger = new ConditionTrigger();
         trigger.lastPlay = -1;
-        this.conditionTriggers.put(id, trigger);
+        this.pullup$conditionTriggers.put(id, trigger);
     }
 
     @Unique
-    private void playSoundsAndDisplayTexts() {
+    private void pullup$playSoundsAndDisplayTexts() {
         if (this.minecraft.level == null) {
             return;
         }
 
-        for (ResourceLocation id : this.conditionTriggers.keySet()) {
+        for (ResourceLocation id : this.pullup$conditionTriggers.keySet()) {
             Condition condition = Registry.CONDITIONS.get(id);
             if (condition == null) {
-                this.triggersToRemove.add(id);
+                this.pullup$triggersToRemove.add(id);
                 continue;
             }
 
-            ConditionTrigger trigger = this.conditionTriggers.get(id);
+            ConditionTrigger trigger = this.pullup$conditionTriggers.get(id);
             final Condition.ColoredText hudText = condition.getHudText();
             if (!trigger.isTriggered) {
-                if (!hudText.isEmpty()) hudTexts.remove(id);
+                if (!hudText.isEmpty()) pullup$hudTexts.remove(id);
                 continue;
             } else {
-                if (!hudText.isEmpty()) hudTexts.put(id, hudText);
+                if (!hudText.isEmpty()) pullup$hudTexts.put(id, hudText);
             }
 
             if (!condition.shouldLoopPlay()) {
@@ -133,13 +133,13 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
                     this.minecraft.level.playLocalSound(this.getX(), this.getY(), this.getZ(),
                             SoundEvent.createFixedRangeEvent(condition.getSound(), 0),
                             SoundSource.VOICE, 1.0F, 1.0F, false);
-                    trigger.lastPlay = this.ticks;
+                    trigger.lastPlay = this.pullup$ticks;
                 }
                 continue;
             }
 
-            if (condition.getPlayDelay() < (this.ticks - trigger.lastPlay)) {
-                trigger.lastPlay = this.ticks;
+            if (condition.getPlayDelay() < (this.pullup$ticks - trigger.lastPlay)) {
+                trigger.lastPlay = this.pullup$ticks;
                 this.minecraft.level.playLocalSound(this.getX(), this.getY(), this.getZ(),
                         SoundEvent.createFixedRangeEvent(condition.getSound(), 0),
                         SoundSource.VOICE, 1.0F, 1.0F, false);
@@ -148,32 +148,32 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
     }
 
     @Unique
-    private void clearTriggers() {
-        for (ResourceLocation id : this.triggersToRemove) {
-            this.conditionTriggers.remove(id);
+    private void pullup$clearTriggers() {
+        for (ResourceLocation id : this.pullup$triggersToRemove) {
+            this.pullup$conditionTriggers.remove(id);
         }
-        this.triggersToRemove.clear();
+        this.pullup$triggersToRemove.clear();
     }
 
     @Unique
-    private void updateTick() {
+    private void pullup$updateTick() {
         if (!this.isFallFlying()) {
-            this.isNewTick = false;
-            this.ticks = 0;
-            this.flightStart = new Date().getTime();
+            this.pullup$isNewTick = false;
+            this.pullup$ticks = 0;
+            this.pullup$flightStart = new Date().getTime();
             return;
         }
 
         long tmpTime = new Date().getTime();
-        int tmpTick = (int) ((tmpTime - this.flightStart) / 50);
-        this.isNewTick = tmpTick != this.ticks;
-        this.ticks = tmpTick;
+        int tmpTick = (int) ((tmpTime - this.pullup$flightStart) / 50);
+        this.pullup$isNewTick = tmpTick != this.pullup$ticks;
+        this.pullup$ticks = tmpTick;
     }
 
     @Unique
     @Override
-    public double getDistanceHorizontal() {
-        int maxDistance = CONFIG.getAsInt("maxDistance");
+    public double pullup$getDistanceHorizontal() {
+        int maxDistance = pullup$CONFIG.getAsInt("maxDistance");
         Vec3 cameraPos = this.getEyePosition(0);
         Vec3 rotate = this.calculateViewVector(0, this.getYRot());
         Vec3 endPos = cameraPos.add(rotate.x * maxDistance, rotate.y * maxDistance, rotate.z * maxDistance);
@@ -183,8 +183,8 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
 
     @Unique
     @Override
-    public double getPitchedDistanceAhead(float pitch) {
-        int maxDistance = CONFIG.getAsInt("maxDistance");
+    public double pullup$getPitchedDistanceAhead(float pitch) {
+        int maxDistance = pullup$CONFIG.getAsInt("maxDistance");
         Vec3 cameraPos = this.getEyePosition(0);
         Vec3 rotate = this.calculateViewVector(this.getXRot() + pitch, this.getYRot());
         Vec3 endPos = cameraPos.add(rotate.x * maxDistance, rotate.y * maxDistance, rotate.z * maxDistance);
@@ -194,8 +194,8 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
 
     @Unique
     @Override
-    public double getRelativeHeight() {
-        int maxDistance = CONFIG.getAsInt("maxDistance");
+    public double pullup$getRelativeHeight() {
+        int maxDistance = pullup$CONFIG.getAsInt("maxDistance");
         Vec3 cameraPos = this.getEyePosition(0);
         Vec3 endPos = cameraPos.add(0, -maxDistance, 0);
         Vec3 target = this.level().clip(new ClipContext(cameraPos, endPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, this)).getLocation();
@@ -204,25 +204,25 @@ public abstract class ClientPlayerEntityMixin extends Player implements ClientPl
 
     @Unique
     @Override
-    public double getDeltaYaw() {
+    public double pullup$getDeltaYaw() {
         return this.getYRot() - this.yRotLast;
     }
 
     @Unique
     @Override
-    public double getDeltaPitch() {
+    public double pullup$getDeltaPitch() {
         return this.getXRot() - this.xRotLast;
     }
 
     @Unique
     @Override
-    public double getFlightTicks() {
-        return this.ticks;
+    public double pullup$getFlightTicks() {
+        return this.pullup$ticks;
     }
 
     @Unique
     @Override
-    public List<Condition.ColoredText> getHudTexts() {
-        return hudTexts.values().stream().toList();
+    public List<Condition.ColoredText> pullup$getHudTexts() {
+        return pullup$hudTexts.values().stream().toList();
     }
 }

@@ -13,39 +13,39 @@ public interface ClientPlayerEntityAccess {
      * Get distance to a block or fluid in front of a player horizontally.
      * Ignoring the pitch.
      */
-    double getPitchedDistanceAhead(float pitch);
+    double pullup$getPitchedDistanceAhead(float pitch);
 
     /**
      * Get distance to a block or fluid in front of a player horizontally.
      * Considering the pitch.
      */
-    double getDistanceHorizontal();
+    double pullup$getDistanceHorizontal();
 
     /**
      * Get distance from the player to the block right below.
      */
-    double getRelativeHeight();
+    double pullup$getRelativeHeight();
 
     /**
      * Get change of the yaw.
      * Compare current yaw with yaw at last client tick.
      */
-    double getDeltaYaw();
+    double pullup$getDeltaYaw();
 
     /**
      * Get change of the pitch.
      * Compare current pitch with pitch at last client tick.
      */
-    double getDeltaPitch();
+    double pullup$getDeltaPitch();
 
     /**
      * Get ticks since last beginning of flight.
      * 1 tick = 50 ms
      */
-    double getFlightTicks();
+    double pullup$getFlightTicks();
 
     /**
      * Get pullup texts to be displayed on the flight hud
      */
-    List<Condition.ColoredText> getHudTexts();
+    List<Condition.ColoredText> pullup$getHudTexts();
 }

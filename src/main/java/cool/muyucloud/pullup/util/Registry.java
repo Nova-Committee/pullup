@@ -19,7 +19,7 @@ public class Registry<T> {
     public static void registerArguments() {
         ARGUMENTS.register(new ResourceLocation("pullup:absolute_height"), (player, world) -> player.getY());
         ARGUMENTS.register(new ResourceLocation("pullup:relative_height"),
-                (player, world) -> ((ClientPlayerEntityAccess) player).getRelativeHeight());
+                (player, world) -> ((ClientPlayerEntityAccess) player).pullup$getRelativeHeight());
         ARGUMENTS.register(new ResourceLocation("pullup:speed"), (player, world) -> {
             Vec3 velocity = player.getDeltaMovement();
             double x = velocity.x;
@@ -36,16 +36,16 @@ public class Registry<T> {
         ARGUMENTS.register(new ResourceLocation("pullup:vertical_speed"), (player, world) -> player.getDeltaMovement().y);
         ARGUMENTS.register(new ResourceLocation("pullup:yaw"), (player, world) -> player.getYRot());
         ARGUMENTS.register(new ResourceLocation("pullup:delta_yaw"),
-                (player, world) -> ((ClientPlayerEntityAccess) player).getDeltaYaw());
+                (player, world) -> ((ClientPlayerEntityAccess) player).pullup$getDeltaYaw());
         ARGUMENTS.register(new ResourceLocation("pullup:pitch"), (player, world) -> player.getXRot());
         ARGUMENTS.register(new ResourceLocation("pullup:delta_pitch"),
-                (player, world) -> ((ClientPlayerEntityAccess) player).getDeltaPitch());
+                (player, world) -> ((ClientPlayerEntityAccess) player).pullup$getDeltaPitch());
         ARGUMENTS.register(new ResourceLocation("pullup:distance_ahead"),
-                (player, world) -> ((ClientPlayerEntityAccess) player).getPitchedDistanceAhead(0));
+                (player, world) -> ((ClientPlayerEntityAccess) player).pullup$getPitchedDistanceAhead(0));
         ARGUMENTS.register(new ResourceLocation("pullup:distance_horizontal"),
-                (player, world) -> ((ClientPlayerEntityAccess) player).getDistanceHorizontal());
+                (player, world) -> ((ClientPlayerEntityAccess) player).pullup$getDistanceHorizontal());
         ARGUMENTS.register(new ResourceLocation("pullup:flight_ticks"),
-                (player, world) -> ((ClientPlayerEntityAccess) player).getFlightTicks());
+                (player, world) -> ((ClientPlayerEntityAccess) player).pullup$getFlightTicks());
     }
 
     public static void registerOperators() {

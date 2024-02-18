@@ -20,7 +20,7 @@ public class ClientPlayNetworkHandlerMixin {
     public void inject$handleLogin(ClientboundLoginPacket packet, CallbackInfo ci) {
         if (!PullUp.getConfig().getAsBool("loadServer")) {
             try {
-                this.loadConditions();
+                this.pullup$loadConditions();
             } catch (Exception e) {
                 PullUp.getLogger().error("Try to load local condition set but failed.", e);
             }
@@ -28,7 +28,7 @@ public class ClientPlayNetworkHandlerMixin {
     }
 
     @Unique
-    private void loadConditions() throws IOException {
+    private void pullup$loadConditions() throws IOException {
         Registry.CONDITIONS.clear();
         String loadSet = PullUp.getConfig().getAsString("loadSet");
         if (Objects.equals(loadSet, "default")) {

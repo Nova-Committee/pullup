@@ -17,9 +17,9 @@ public class ServerWorldMixin {
     @Inject(method = "addNewPlayer", at = @At("TAIL"))
     public void inject$addNewPlayer(ServerPlayer player, CallbackInfo ci) {
         if (PullUp.getConfig().getAsBool("sendServer")) {
-            final PacketDistributor.PacketTarget target = PacketDistributor.PLAYER.with(player);
-            NetworkHandlerS2C.S2C_CLEAR_CONDITIONS.send(new S2CClearConditions(), target);
-            NetworkHandlerS2C.S2C_LOAD_CONDITIONS.send(new S2CLoadConditions(), target);
+            final PacketDistributor.PacketTarget target = PacketDistributor.PLAYER.with(() -> player);
+            NetworkHandlerS2C.S2C_CLEAR_CONDITIONS.send(target, new S2CClearConditions());
+            NetworkHandlerS2C.S2C_LOAD_CONDITIONS.send(target, new S2CLoadConditions());
         }
     }
 }

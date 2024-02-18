@@ -21,7 +21,7 @@ public class PullUpIndicator extends HudComponent {
     public void render(GuiGraphics drawContext, float v, Minecraft mc) {
         if (mc.player == null) return;
         final ClientPlayerEntityAccess access = (ClientPlayerEntityAccess) mc.player;
-        final List<Condition.ColoredText> texts = access.getHudTexts();
+        final List<Condition.ColoredText> texts = access.pullup$getHudTexts();
         if (texts.isEmpty()) return;
         final float x = dims.wScreen * PullUp.getConfig().getAsFloat("hudTextDisplayX");
         final float y = dims.hScreen * PullUp.getConfig().getAsFloat("hudTextDisplayY");

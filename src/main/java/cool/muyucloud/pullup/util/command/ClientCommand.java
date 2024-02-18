@@ -16,7 +16,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraftforge.network.PacketDistributor;
 import org.apache.logging.log4j.Logger;
 
 public class ClientCommand {
@@ -105,7 +104,7 @@ public class ClientCommand {
             return 0;
         }
 
-        NetworkHandlerC2S.C2S_GRAB.send(new C2SGrabConditions(), PacketDistributor.SERVER.noArg());
+        NetworkHandlerC2S.C2S_GRAB.sendToServer(new C2SGrabConditions());
         source.sendSystemMessage(Component.translatable("command.pullup.client.grab.sent"));
         return 1;
     }

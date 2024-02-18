@@ -73,9 +73,9 @@ public class ServerCommand {
         source.sendSuccess(() -> text, true);
         CONFIG.set("loadSet", name);
         if (CONFIG.getAsBool("sendServer")) {
-            final PacketDistributor.PacketTarget target = PacketDistributor.PLAYER.with(source.getPlayer());
-            NetworkHandlerS2C.S2C_CLEAR_CONDITIONS.send(new S2CClearConditions(), target);
-            NetworkHandlerS2C.S2C_LOAD_CONDITIONS.send(new S2CLoadConditions(), target);
+            final PacketDistributor.PacketTarget target = PacketDistributor.PLAYER.with(source::getPlayer);
+            NetworkHandlerS2C.S2C_CLEAR_CONDITIONS.send(target, new S2CClearConditions());
+            NetworkHandlerS2C.S2C_LOAD_CONDITIONS.send(target, new S2CLoadConditions());
         }
         return 1;
     }
@@ -85,9 +85,9 @@ public class ServerCommand {
         source.sendSuccess(() -> text, true);
         CONFIG.set("loadSet", "default");
         if (CONFIG.getAsBool("sendServer")) {
-            final PacketDistributor.PacketTarget target = PacketDistributor.PLAYER.with(source.getPlayer());
-            NetworkHandlerS2C.S2C_CLEAR_CONDITIONS.send(new S2CClearConditions(), target);
-            NetworkHandlerS2C.S2C_LOAD_CONDITIONS.send(new S2CLoadConditions(), target);
+            final PacketDistributor.PacketTarget target = PacketDistributor.PLAYER.with(source::getPlayer);
+            NetworkHandlerS2C.S2C_CLEAR_CONDITIONS.send(target, new S2CClearConditions());
+            NetworkHandlerS2C.S2C_LOAD_CONDITIONS.send(target, new S2CLoadConditions());
         }
         return 1;
     }

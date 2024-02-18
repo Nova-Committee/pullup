@@ -5,8 +5,8 @@ import cool.muyucloud.pullup.util.network.msg.S2CClearConditions;
 import cool.muyucloud.pullup.util.network.msg.S2CLoadConditions;
 import cool.muyucloud.pullup.util.network.msg.S2CRefuse;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.ChannelBuilder;
-import net.minecraftforge.network.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 import org.slf4j.Logger;
 
 public class NetworkHandlerS2C {
@@ -25,25 +25,34 @@ public class NetworkHandlerS2C {
     }
 
     public static void registerMessage() {
-        S2C_CLEAR_CONDITIONS = ChannelBuilder.named(CLEAR_CONDITIONS)
-                .optional()
-                .simpleChannel();
+        S2C_CLEAR_CONDITIONS = NetworkRegistry.newSimpleChannel(
+                CLEAR_CONDITIONS,
+                () -> NetworkRegistry.ACCEPTVANILLA,
+                NetworkRegistry.ACCEPTVANILLA::equals,
+                NetworkRegistry.ACCEPTVANILLA::equals
+        );
         S2C_CLEAR_CONDITIONS.messageBuilder(S2CClearConditions.class, nextId())
                 .encoder(S2CClearConditions::toBytes)
                 .decoder(S2CClearConditions::new)
                 .consumerMainThread(S2CClearConditions::handler)
                 .add();
-        S2C_LOAD_CONDITIONS = ChannelBuilder.named(LOAD_CONDITIONS)
-                .optional()
-                .simpleChannel();
+        S2C_LOAD_CONDITIONS = NetworkRegistry.newSimpleChannel(
+                LOAD_CONDITIONS,
+                () -> NetworkRegistry.ACCEPTVANILLA,
+                NetworkRegistry.ACCEPTVANILLA::equals,
+                NetworkRegistry.ACCEPTVANILLA::equals
+        );
         S2C_LOAD_CONDITIONS.messageBuilder(S2CLoadConditions.class, nextId())
                 .encoder(S2CLoadConditions::toBytes)
                 .decoder(S2CLoadConditions::new)
                 .consumerMainThread(S2CLoadConditions::handler)
                 .add();
-        S2C_REFUSE = ChannelBuilder.named(REFUSE)
-                .optional()
-                .simpleChannel();
+        S2C_REFUSE = NetworkRegistry.newSimpleChannel(
+                REFUSE,
+                () -> NetworkRegistry.ACCEPTVANILLA,
+                NetworkRegistry.ACCEPTVANILLA::equals,
+                NetworkRegistry.ACCEPTVANILLA::equals
+        );
         S2C_REFUSE.messageBuilder(S2CRefuse.class, nextId())
                 .encoder(S2CRefuse::toBytes)
                 .decoder(S2CRefuse::new)
